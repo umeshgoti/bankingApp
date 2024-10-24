@@ -53,9 +53,17 @@ public class TransactionServiceImpl implements TransactionService {
 
         if (TransactionType.WITHDRAW.equals(transactionDTO.getTransactionType())) {
             if (user.getBalance() < transactionDTO.getTransactionAmount()) {
+                transaction.setAtm(atm);
+                transaction.setCustomer(user);
+                transaction.setStatus("Failed");
+                transactionRepository.save(transaction);
                 throw new ThirdPartyExceptions(HttpStatus.BAD_REQUEST.value(), "Insufficient Balance!");
             }
             if (atm.getAmount() < transactionDTO.getTransactionAmount()) {
+                transaction.setAtm(atm);
+                transaction.setCustomer(user);
+                transaction.setStatus("Failed");
+                transactionRepository.save(transaction);
                 throw new ThirdPartyExceptions(HttpStatus.BAD_REQUEST.value(), "ATM is unable to Withdraw Cash at a Moment!");
             }
 
@@ -66,6 +74,8 @@ public class TransactionServiceImpl implements TransactionService {
         } else if (TransactionType.DEPOSIT.equals(transactionDTO.getTransactionType())) {
             atm.setAmount(atm.getAmount() + transactionDTO.getTransactionAmount());
             user.setBalance(user.getBalance() + transactionDTO.getTransactionAmount());
+            isSuccessful = true;
+        }else{
             isSuccessful = true;
         }
 
