@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequestDTO {
 
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String mobileNo;
     private String pin;
     private Roles role;
-    private Long balance;
+    private Double balance;
 
 }

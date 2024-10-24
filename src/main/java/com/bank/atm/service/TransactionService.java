@@ -8,7 +8,9 @@ import java.util.List;
 public interface TransactionService {
     Transaction createTransaction(TransactionDTO transaction);
 
-    Transaction getTransactionById(String transactionId);
+    TransactionDTO getTransactionById(String transactionId);
 
-    List<Transaction> getAllTransactions();
+    List<TransactionDTO> getAllTransactions();
+
+    Double getAcountBalance(TransactionDTO transaction);
 }

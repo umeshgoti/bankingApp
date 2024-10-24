@@ -1,12 +1,14 @@
 package com.bank.atm.service.impl;
 
 import com.bank.atm.DTO.AtmDTO;
+import com.bank.atm.Exception.ResourceNotFoundException;
 import com.bank.atm.entity.Atm;
 import com.bank.atm.repository.AtmRepository;
 import com.bank.atm.service.AtmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,13 +54,21 @@ public class AtmServiceImpl implements AtmService {
     }
 
     @Override
-    public Atm getAtmById(String atmId) {
-        return atmRepository.findById(atmId)
-                .orElseThrow(() -> new RuntimeException("Atm not found with id: " + atmId));
+    public AtmDTO getAtmById(String atmId) {
+        Atm atm = atmRepository.findById(atmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Atm with id: " + atmId));
+        AtmDTO atmDTO = AtmDTO.fromEntity(atm);
+        return atmDTO;
     }
 
     @Override
-    public List<Atm> getAllAtms() {
-        return atmRepository.findAll();
+    public List<AtmDTO> getAllAtms() {
+        List<Atm> all = atmRepository.findAll();
+        List<AtmDTO> atmDTOS= new ArrayList<>();
+        for(Atm atm : all){
+            AtmDTO dto = AtmDTO.fromEntity(atm);
+            atmDTOS.add(dto);
+        }
+        return atmDTOS;
     }
 }

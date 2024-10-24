@@ -38,15 +38,15 @@ public class UserServiceImpl implements UserService {
     public User signUp(RegisterRequestDTO registerRequestDTO) {
         Optional<User> byMobileNo = userRepo.findByMobileNo(registerRequestDTO.getMobileNo());
         if (byMobileNo.isPresent()) {
-            throw new UsernameNotFoundException("user Name already registered" + registerRequestDTO.getMobileNo());
+            throw new UsernameNotFoundException("user already registered : " + registerRequestDTO.getMobileNo());
         } else {
             User user = new User();
             user.setMobileNo(registerRequestDTO.getMobileNo());
             user.setPin(passwordEncoder.encode(registerRequestDTO.getPin()));
             user.setRole(Roles.CUSTOMER);
-            user.setFirstname(registerRequestDTO.getFirstname());
+            user.setFirstname(registerRequestDTO.getFirstName());
             user.setBalance(registerRequestDTO.getBalance());
-            user.setLastname(registerRequestDTO.getLastname());
+            user.setLastname(registerRequestDTO.getLastName());
             User save = userRepo.save(user);
             return save;
         }

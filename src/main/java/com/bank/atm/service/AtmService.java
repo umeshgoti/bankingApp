@@ -12,7 +12,7 @@ public interface AtmService {
 
     void deleteAtm(String atmId);
 
-    Atm getAtmById(String atmId);
+    AtmDTO getAtmById(String atmId);
 
-    List<Atm> getAllAtms();
+    List<AtmDTO> getAllAtms();
 }

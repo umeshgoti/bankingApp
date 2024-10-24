@@ -32,6 +32,9 @@ public class Transaction extends BaseEntity {
     @Column(name = "time", nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime time;
 
+    @Column(name= "transaction_amount",nullable = false)
+    private Double transactionAmount;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;

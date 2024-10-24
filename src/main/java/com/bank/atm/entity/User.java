@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     private Roles role;
 
     @Column(name = "balance", nullable = false)
-    private Long balance;
+    private Double balance;
 
     @PrePersist
     public void prePersist() {

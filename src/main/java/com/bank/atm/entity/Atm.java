@@ -28,7 +28,7 @@ public class Atm extends BaseEntity {
     private boolean isActive;
 
     @Column(name = "amount", nullable = false)
-    private double amount;
+    private Double amount;
 
     @PrePersist
     public void prePersist() {
