@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AtmDTO {
+    private String id;
     private String locationName;
     private String welcomeMessage;
     private boolean isActive;
@@ -14,6 +15,7 @@ public class AtmDTO {
 
     public static AtmDTO fromEntity(Atm atm) {
         AtmDTO dto = new AtmDTO();
+        dto.setId(atm.getId());
         dto.setLocationName(atm.getLocationName());
         dto.setWelcomeMessage(atm.getWelcomeMessage());
         dto.setActive(atm.isActive());

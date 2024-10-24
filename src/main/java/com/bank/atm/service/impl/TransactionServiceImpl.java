@@ -35,39 +35,50 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction createTransaction(TransactionDTO transactionDTO) {
-        Atm atm = atmRepository.findById(transactionDTO.getAtmId()).orElseThrow(() -> new ResourceNotFoundException("ATM"));
-        User user = userRepository.findById(transactionDTO.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("User"));
-        Transaction transaction;
-        if(TransactionType.WITHDRAW.equals(transactionDTO.getTransactionType())) {
+        Atm atm = atmRepository.findById(transactionDTO.getAtmId()).orElseThrow(() -> new ResourceNotFoundException("ATM not found"));
+        User user = userRepository.findById(transactionDTO.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Transaction transaction = transactionDTO.createEntity(transactionDTO);
+
+        boolean isSuccessful = processTransaction(transactionDTO, atm, user, transaction);
+        transaction.setAtm(atm);
+        transaction.setCustomer(user);
+        transaction.setStatus(isSuccessful ? "Success" : "Failed");
+
+        return transactionRepository.save(transaction);
+    }
+
+    private boolean processTransaction(TransactionDTO transactionDTO, Atm atm, User user, Transaction transaction) {
+        boolean isSuccessful = false;
+
+        if (TransactionType.WITHDRAW.equals(transactionDTO.getTransactionType())) {
             if (user.getBalance() < transactionDTO.getTransactionAmount()) {
-                transaction = transactionDTO.createEntity(transactionDTO);
-                transaction.setStatus("Failed");
-                transactionRepository.save(transaction);
                 throw new ThirdPartyExceptions(HttpStatus.BAD_REQUEST.value(), "Insufficient Balance!");
             }
             if (atm.getAmount() < transactionDTO.getTransactionAmount()) {
-                transaction = transactionDTO.createEntity(transactionDTO);
-                transaction.setStatus("Failed");
-                transactionRepository.save(transaction);
                 throw new ThirdPartyExceptions(HttpStatus.BAD_REQUEST.value(), "ATM is unable to Withdraw Cash at a Moment!");
             }
-            atm.setAmount(atm.getAmount()-transactionDTO.getTransactionAmount());
-            user.setBalance(user.getBalance()-transactionDTO.getTransactionAmount());
-            transaction = transactionDTO.createEntity(transactionDTO);
-            transaction.setStatus("Success");
+
+            atm.setAmount(atm.getAmount() - transactionDTO.getTransactionAmount());
+            user.setBalance(user.getBalance() - transactionDTO.getTransactionAmount());
+            isSuccessful = true;
+
         } else if (TransactionType.DEPOSIT.equals(transactionDTO.getTransactionType())) {
-            atm.setAmount(atm.getAmount()+transactionDTO.getTransactionAmount());
-            user.setBalance(user.getBalance()+transactionDTO.getTransactionAmount());
-            transaction = transactionDTO.createEntity(transactionDTO);
-            transaction.setStatus("Success");
-        }else{
-            transaction = transactionDTO.createEntity(transactionDTO);
+            atm.setAmount(atm.getAmount() + transactionDTO.getTransactionAmount());
+            user.setBalance(user.getBalance() + transactionDTO.getTransactionAmount());
+            isSuccessful = true;
         }
-        transaction.setAtm(atm);
-        transaction.setCustomer(user);
+
         userRepository.save(user);
         atmRepository.save(atm);
-        return transactionRepository.save(transaction);
+
+        return isSuccessful;
+    }
+
+    @Override
+    public Double getAcountBalance(TransactionDTO transaction) {
+        User user = userRepository.findById(transaction.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return user.getBalance();
     }
 
     @Override
@@ -88,9 +99,4 @@ public class TransactionServiceImpl implements TransactionService {
         return dtos;
     }
 
-    @Override
-    public Double getAcountBalance(TransactionDTO transaction) {
-        User user = userRepository.findById(transaction.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("User"));
-        return user.getBalance();
-    }
 }

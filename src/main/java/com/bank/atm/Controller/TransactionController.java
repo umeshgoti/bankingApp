@@ -2,6 +2,7 @@ package com.bank.atm.Controller;
 
 import com.bank.atm.DTO.ApiResponse;
 import com.bank.atm.DTO.TransactionDTO;
+import com.bank.atm.Exception.ResourceNotFoundException;
 import com.bank.atm.Exception.ThirdPartyExceptions;
 import com.bank.atm.entity.Transaction;
 import com.bank.atm.service.TransactionService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -20,18 +22,22 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> createTransaction(@RequestBody TransactionDTO transaction) {
+    public ResponseEntity<ApiResponse<String>> createTransaction(@RequestBody TransactionDTO transactionDTO) {
         try {
-            Transaction transaction1 = transactionService.createTransaction(transaction);
-            Double acountBalance = transactionService.getAcountBalance(transaction);
-            return ResponseEntity.ok(new ApiResponse<>("Your Acount Balance is : "+acountBalance, HttpStatus.OK.value(),transaction1.getId()));
-        } catch (Exception e) {
+            Transaction transaction = transactionService.createTransaction(transactionDTO);
+            Double accountBalance = transactionService.getAcountBalance(transactionDTO);
+            return ResponseEntity.ok(new ApiResponse<>("Your Account Balance is : " + accountBalance, HttpStatus.OK.value(), transaction.getId()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(e.getMessage(), HttpStatus.NOT_FOUND.value(), null));
+        } catch (ThirdPartyExceptions e) {
             return ResponseEntity.badRequest().body(new ApiResponse<>(e.getMessage(), HttpStatus.BAD_REQUEST.value(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null));
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> getTransactionById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<Object>> getTransactionById(@PathVariable String id) {
         try {
             TransactionDTO transactionDTO = transactionService.getTransactionById(id);
             return ResponseEntity.ok(new ApiResponse<>("Transaction retrieved successfully", HttpStatus.OK.value(), transactionDTO));
@@ -41,7 +47,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<?>> getAllTransactions() {
+    public ResponseEntity<ApiResponse<Object>> getAllTransactions() {
         try {
             List<TransactionDTO> allTransactions = transactionService.getAllTransactions();
             return ResponseEntity.ok(new ApiResponse<>("All transactions retrieved successfully", HttpStatus.OK.value(), allTransactions));

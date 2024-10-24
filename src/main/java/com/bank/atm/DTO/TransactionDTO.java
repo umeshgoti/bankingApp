@@ -18,15 +18,14 @@ public class TransactionDTO {
     private LocalDateTime time;
     private TransactionType transactionType;
     private String status;
-    private double transactionAmount;
+    private double transactionAmount = 0;
 
     public Transaction createEntity(TransactionDTO transactionDTO) {
         Transaction transaction = new Transaction();
-        transaction.setId(transactionDTO.getId());
-        transaction.setTime(transactionDTO.getTime());
+        transaction.setTime(LocalDateTime.now());
         transaction.setTransactionType(transactionDTO.getTransactionType());
         transaction.setStatus(transactionDTO.getStatus());
-        transaction.setTransactionAmount(transactionDTO.getTransactionAmount());
+        transaction.setTransactionAmount(transactionAmount);
         return transaction;
     }
 

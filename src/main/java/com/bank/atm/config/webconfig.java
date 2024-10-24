@@ -30,16 +30,14 @@ public class webconfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        WebMvcConfigurer.super.extendMessageConverters(converters);
-        converters.add(new MappingJackson2HttpMessageConverter(
-                new Jackson2ObjectMapperBuilder()
-                        .dateFormat(new StdDateFormat())
-                        .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                        .build()));
-        converters.add(new ResourceHttpMessageConverter());
-    }
-
-
+//    @Override
+//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        WebMvcConfigurer.super.extendMessageConverters(converters);
+//        converters.add(new MappingJackson2HttpMessageConverter(
+//                new Jackson2ObjectMapperBuilder()
+//                        .dateFormat(new StdDateFormat())
+//                        .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+//                        .build()));
+//        converters.add(new ResourceHttpMessageConverter());
+//    }
 }

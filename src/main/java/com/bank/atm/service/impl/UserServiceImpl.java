@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,9 +49,23 @@ public class UserServiceImpl implements UserService {
             user.setFirstname(registerRequestDTO.getFirstName());
             user.setBalance(registerRequestDTO.getBalance());
             user.setLastname(registerRequestDTO.getLastName());
-            User save = userRepo.save(user);
-            return save;
+            return userRepo.save(user);
         }
+    }
+
+    @Override
+    public List<RegisterRequestDTO> getAllCustomer() {
+        List<User> all = userRepo.findAll();
+        List<RegisterRequestDTO> dtos = new ArrayList<>();
+        for(User user : all){
+            RegisterRequestDTO dto = new RegisterRequestDTO();
+            dto.setFirstName(user.getFirstname());
+            dto.setLastName(user.getLastname());
+            dto.setMobileNo(user.getMobileNo());
+            dto.setBalance(user.getBalance());
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
 }

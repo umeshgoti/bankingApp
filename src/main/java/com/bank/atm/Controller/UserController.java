@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
@@ -36,7 +37,7 @@ public class UserController {
     JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<?>> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ApiResponse<Object>> login(@RequestBody LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getMobileNo(), loginRequest.getPin()));
@@ -52,10 +53,20 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<?>> signup(@RequestBody RegisterRequestDTO registerRequestDTO) {
+    public ResponseEntity<ApiResponse<Object>> signup(@RequestBody RegisterRequestDTO registerRequestDTO) {
         try {
             User user = userService.signUp(registerRequestDTO);
             return ResponseEntity.ok(new ApiResponse<>("User registered successfully with ID: " + user.getId(), HttpStatus.OK.value(), user.getId()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>(e.getMessage(), HttpStatus.BAD_REQUEST.value(), null));
+        }
+    }
+
+    @GetMapping("/getAllCustomer")
+    public ResponseEntity<ApiResponse<Object>> getAllCustomer(){
+        try {
+            List<RegisterRequestDTO> allCustomer = userService.getAllCustomer();
+            return ResponseEntity.ok(new ApiResponse<>("Success", HttpStatus.OK.value(), allCustomer));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ApiResponse<>(e.getMessage(), HttpStatus.BAD_REQUEST.value(), null));
         }
