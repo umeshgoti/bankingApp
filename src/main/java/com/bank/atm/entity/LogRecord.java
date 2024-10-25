@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Table(name = "record")
-public class Record extends BaseEntity{
+public class LogRecord extends BaseEntity{
     @Id
     @UuidGenerator
     @Column(name = "id", updatable = false, nullable = false)
