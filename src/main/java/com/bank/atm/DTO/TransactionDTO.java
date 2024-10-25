@@ -2,6 +2,7 @@ package com.bank.atm.DTO;
 
 import com.bank.atm.entity.Transaction;
 import com.bank.atm.enumaration.TransactionType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class TransactionDTO {
     private String atmLocation;
     private String customerId;
     private String customerName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
     private TransactionType transactionType;
     private String status;

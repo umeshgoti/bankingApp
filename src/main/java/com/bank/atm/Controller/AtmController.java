@@ -20,7 +20,7 @@ public class AtmController {
     private AtmService atmService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> createAtm(@RequestBody AtmDTO atmDTO, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ApiResponse<String>> createAtm(@RequestBody AtmDTO atmDTO, HttpServletRequest httpServletRequest) {
         try {
             Atm atm = atmService.createAtm(atmDTO);
             return ResponseEntity.ok(new ApiResponse<>("ATM added successfully.", HttpStatus.OK.value(), atm.getId()));
@@ -30,7 +30,7 @@ public class AtmController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> updateAtm(@PathVariable String id, @RequestBody AtmDTO atmDTO) {
+    public ResponseEntity<ApiResponse<String>> updateAtm(@PathVariable String id, @RequestBody AtmDTO atmDTO) {
         try {
             Atm atm = atmService.updateAtm(id, atmDTO);
             return ResponseEntity.ok(new ApiResponse<>("ATM updated successfully", HttpStatus.OK.value(), atm.getId()));
@@ -40,7 +40,7 @@ public class AtmController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> deleteAtm(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<String>> deleteAtm(@PathVariable String id) {
         try {
             atmService.deleteAtm(id);
             return ResponseEntity.ok(new ApiResponse<>("ATM deleted successfully", HttpStatus.OK.value(), null));
@@ -50,7 +50,7 @@ public class AtmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> getAtmById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<Object>> getAtmById(@PathVariable String id) {
         try {
             AtmDTO atmDTO = atmService.getAtmById(id);
             return ResponseEntity.ok(new ApiResponse<>("ATM retrieved successfully", HttpStatus.OK.value(), atmDTO));
@@ -60,7 +60,7 @@ public class AtmController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<?>> getAllAtms() {
+    public ResponseEntity<ApiResponse<Object>> getAllAtms() {
         try {
             List<AtmDTO> allAtms = atmService.getAllAtms();
             return ResponseEntity.ok(new ApiResponse<>("All ATMs retrieved successfully", HttpStatus.OK.value(), allAtms));

@@ -10,7 +10,7 @@ public class AtmDTO {
     private String id;
     private String locationName;
     private String welcomeMessage;
-    private boolean isActive;
+    private Boolean isActive;
     private double amount;
 
     public static AtmDTO fromEntity(Atm atm) {
@@ -18,7 +18,7 @@ public class AtmDTO {
         dto.setId(atm.getId());
         dto.setLocationName(atm.getLocationName());
         dto.setWelcomeMessage(atm.getWelcomeMessage());
-        dto.setActive(atm.isActive());
+        dto.setIsActive(atm.isActive());
         dto.setAmount(atm.getAmount());
         return dto;
     }
@@ -27,7 +27,7 @@ public class AtmDTO {
         Atm atm = new Atm();
         atm.setLocationName(dto.getLocationName());
         atm.setWelcomeMessage(dto.getWelcomeMessage());
-        atm.setActive(dto.isActive());
+        atm.setActive(dto.getIsActive());
         atm.setAmount(dto.getAmount());
         return atm;
     }
