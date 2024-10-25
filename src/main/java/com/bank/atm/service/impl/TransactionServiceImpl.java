@@ -102,20 +102,6 @@ public class TransactionServiceImpl implements TransactionService {
         return dto;
     }
 
-//    @Override
-//    public List<TransactionDTO> getAllTransactions() {
-//        List<Transaction> transactions = transactionRepository.findAll();
-//        transactions.stream()
-//                .filter(transaction -> transaction.getTime().isAfter(now.minus(24, ChronoUnit.HOURS)))
-//                .map(TransactionDTO::fromEntity)
-//                .collect(Collectors.toList());
-//        List<TransactionDTO> dtos = new ArrayList<>();
-//        for(Transaction transaction:transactions){
-//            dtos.add(TransactionDTO.fromEntity(transaction));
-//        }
-//        return dtos;
-//    }
-
     @Override
     public List<TransactionDTO> getAllTransactions() {
         LocalDateTime now = LocalDateTime.now();
