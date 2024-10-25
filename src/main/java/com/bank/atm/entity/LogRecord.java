@@ -24,10 +24,10 @@ public class LogRecord extends BaseEntity{
     @Column(name = "record_type", nullable = false)
     private RecordType recordType;
 
-    @Column(name = "start_time", nullable = false, columnDefinition = "DATETIME")
+    @Column(name = "start_time", columnDefinition = "DATETIME")
     private LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false, columnDefinition = "DATETIME")
+    @Column(name = "end_time", columnDefinition = "DATETIME")
     private LocalDateTime endTime;
 
     @PrePersist
