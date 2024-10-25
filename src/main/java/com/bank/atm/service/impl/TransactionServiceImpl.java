@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -99,14 +102,29 @@ public class TransactionServiceImpl implements TransactionService {
         return dto;
     }
 
+//    @Override
+//    public List<TransactionDTO> getAllTransactions() {
+//        List<Transaction> transactions = transactionRepository.findAll();
+//        transactions.stream()
+//                .filter(transaction -> transaction.getTime().isAfter(now.minus(24, ChronoUnit.HOURS)))
+//                .map(TransactionDTO::fromEntity)
+//                .collect(Collectors.toList());
+//        List<TransactionDTO> dtos = new ArrayList<>();
+//        for(Transaction transaction:transactions){
+//            dtos.add(TransactionDTO.fromEntity(transaction));
+//        }
+//        return dtos;
+//    }
+
     @Override
     public List<TransactionDTO> getAllTransactions() {
-        List<Transaction> transactions = transactionRepository.findAll();
-        List<TransactionDTO> dtos = new ArrayList<>();
-        for(Transaction transaction:transactions){
-            dtos.add(TransactionDTO.fromEntity(transaction));
-        }
-        return dtos;
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime timeThreshold = now.minus(24, ChronoUnit.HOURS);
+
+        List<Transaction> transactions = transactionRepository.findTransactionsWithinLast24Hours(timeThreshold);
+        return transactions.stream()
+                .map(TransactionDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
 }

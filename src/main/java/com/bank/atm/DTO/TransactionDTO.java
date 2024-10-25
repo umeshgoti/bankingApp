@@ -39,6 +39,7 @@ public class TransactionDTO {
         dto.setCustomerId(transaction.getCustomer().getId());
         dto.setCustomerName(transaction.getCustomer().getFirstname()+" "+transaction.getCustomer().getLastname());
         dto.setTime(transaction.getTime());
+        dto.setStatus(transaction.getStatus());
         dto.setTransactionType(transaction.getTransactionType());
         dto.setTransactionAmount(transaction.getTransactionAmount());
         return dto;
