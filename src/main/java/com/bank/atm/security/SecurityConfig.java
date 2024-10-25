@@ -38,7 +38,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable).cors().and()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/user/login", "/user/signup").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/atm").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/atm","/api/log-records/download-video").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

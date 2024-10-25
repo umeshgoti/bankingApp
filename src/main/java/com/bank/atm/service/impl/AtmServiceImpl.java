@@ -6,6 +6,7 @@ import com.bank.atm.entity.Atm;
 import com.bank.atm.repository.AtmRepository;
 import com.bank.atm.service.AtmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class AtmServiceImpl implements AtmService {
 
     @Override
     public List<AtmDTO> getAllAtms() {
-        List<Atm> all = atmRepository.findAll();
+        List<Atm> all = atmRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate"));
         List<AtmDTO> atmDTOS= new ArrayList<>();
         for(Atm atm : all){
             AtmDTO dto = AtmDTO.fromEntity(atm);

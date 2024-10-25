@@ -55,9 +55,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<RegisterRequestDTO> getAllCustomer() {
-        List<User> all = userRepo.findAll();
+        List<User> all = userRepo.findAllOrderByCreatedDateDesc();
         List<RegisterRequestDTO> dtos = new ArrayList<>();
-        for(User user : all){
+        for (User user : all) {
             RegisterRequestDTO dto = new RegisterRequestDTO();
             dto.setFirstName(user.getFirstname());
             dto.setLastName(user.getLastname());

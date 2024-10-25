@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -55,6 +56,7 @@ public class LogRecordServiceImpl implements LogRecordService {
     @Override
     public List<LogRecordDTO> getAllRecords() {
         return logRecordRepository.findAll().stream()
+                .sorted(Comparator.comparing(LogRecord::getStartTime).reversed())
                 .map(LogRecordDTO::fromEntity)
                 .collect(Collectors.toList());
     }
