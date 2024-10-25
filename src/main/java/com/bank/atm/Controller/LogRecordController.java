@@ -3,8 +3,10 @@ package com.bank.atm.Controller;
 import com.bank.atm.DTO.ApiResponse;
 import com.bank.atm.DTO.LogRecordDTO;
 import com.bank.atm.entity.LogRecord;
+import com.bank.atm.enumaration.RecordType;
 import com.bank.atm.service.LogRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,14 +57,16 @@ public class LogRecordController {
         }
     }
 
-    @GetMapping("/{id}/download")
-    public ResponseEntity<ApiResponse<LogRecordDTO>> downloadRecord(@PathVariable String id) {
+    @GetMapping("/download-video")
+    public ResponseEntity<Resource> downloadVideo(@RequestParam("recordType")RecordType recordType) {
         try {
-            LogRecordDTO record = logRecordService.downloadRecord(id);
-            return ResponseEntity.ok(new ApiResponse<>("Record downloaded successfully", HttpStatus.OK.value(), record));
+            if(RecordType.VIDEO.equals(recordType)){
+                return logRecordService.downloadRecord();
+            }else {
+                return logRecordService.downloadImage();
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse<>("Error downloading record: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
